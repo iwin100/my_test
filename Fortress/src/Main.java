@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+// https://algospot.com/judge/problem/read/FORTRESS
 public class Main {
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		System.setIn(new FileInputStream("input"));

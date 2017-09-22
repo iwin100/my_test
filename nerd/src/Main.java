@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
+// https://algospot.com/judge/problem/read/NERD2
 public class Main {
 	
 	static LinkedList<Person> CANDI;

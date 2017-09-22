@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+// https://algospot.com/judge/problem/read/MORDOR
 public class Main {
 	static int input[];
 	static Info Tree[];
