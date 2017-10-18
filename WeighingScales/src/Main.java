@@ -9,7 +9,8 @@ import java.util.StringTokenizer;
 // https://www.acmicpc.net/problem/2629
 public class Main {
 	static int Weight[];
-	static char table[];
+	static boolean table[];
+	static boolean Match[][];
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		System.setIn(new FileInputStream("input"));
@@ -26,15 +27,15 @@ public class Main {
 			total += Weight[i];
 		}
 		
-		table = new char[total + 1];
-		Arrays.fill(table, 'x');
+		table = new boolean[total + 1];
+		Match = new boolean[501][total + 1];
+		Arrays.fill(table, false);
 		
-		table[Weight[0]] = 'o';
-		int start = Weight[0];
+		table[Weight[0]] = true;
 		int end = Weight[0];
 		
 		for (int idx = 1; idx<N; idx++) {
-			build(Weight[idx], start, (end += Weight[idx]) - Weight[idx]);
+			build(Weight[idx], 0, (end += Weight[idx]) - Weight[idx]);
 			
 //			for (int j = 0; j<total+1; j++) {
 //				System.out.print(table[j] + " ");
@@ -45,9 +46,12 @@ public class Main {
 		int CASE = Integer.parseInt(br.readLine());
 		token = new StringTokenizer(br.readLine());
 		StringBuilder output = new StringBuilder();
-		while (CASE-- >0) {
-			int CASE00 = Integer.parseInt(token.nextToken());
-			if (table[CASE00] == 'o') {
+		while (CASE-- > 0) {
+			int idx  = Integer.parseInt(token.nextToken());
+			
+			if (idx > total) {
+				output.append("N");
+			} else if (table[idx] == true) {
 				output.append("Y");
 			} else {
 				output.append("N");
@@ -61,22 +65,26 @@ public class Main {
 
 	private static void build(int value, int start, int end) {
 		ArrayList<Integer> data = new ArrayList<Integer>();
+		
 		for (int i=start; i<=end; i++) {
-			if (table[i] == 'o') {
-				data.add(i);
+			if (table[i] == true) {
+				if (Match[value][i] != true) {
+					data.add(i);
+				}
 			}
 		}
 		
-		table[value] = 'o';
+		table[value] = true;
 		for (int i=0; i<data.size(); i++) {
 			int value2 = data.get(i);
-			table[value + value2] = 'o';
+			table[value + value2] = true;
 			if (value > value2) {
-				table[value - value2] = 'o';		
+				table[value - value2] = true;		
 			} else {
-				table[value2 - value] = 'o';
+				table[value2 - value] = true;
 			}
-		
+			
+			Match[value][value2] = true;
 		}
 	}
 }
