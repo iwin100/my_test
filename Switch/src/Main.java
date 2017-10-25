@@ -19,7 +19,7 @@ public class Main {
 		int M = Integer.parseInt(token.nextToken());
 		
 		tree = new int[N*4];
-		info = new int[N+1];
+		info = new int[N];
 		
 		while (M-- > 0) {
 			token = new StringTokenizer(br.readLine());
@@ -28,23 +28,81 @@ public class Main {
 			int T = Integer.parseInt(token.nextToken());
 			
 			if (O == 0) {
-				for (int target = S; target <= T; target++) {
-					// 스위치 반전
-					update(1, 0, N, target);
-					if (info[target] == 0) {
-						info[target] = 1;
+				// 스위치 반전
+				range_update(1, 0, N-1, S-1, T-1);
+				for (int i = S-1; i<= T-1; i++) {
+					if (info[i] == 0) {
+						info[i]++;
 					} else {
-						info[target] = 0;
+						info[i]--;
 					}
 				}
 			} else {
 				// 켜진거 카운트
-				int output = get(1, 0, N, S, T);
+				int output = get(1, 0, N-1, S-1, T-1);
 				System.out.println(output);
 			}
 		}
 	}
 	
+	
+	
+	private static void range_update(int idx, int start, int end, int left, int right) {
+		if (right < start || left > end) {
+			return;
+		}
+		
+		// 리프 노드
+		if (start == end) {
+			if (info[end] == 0) {
+				tree[idx]++;
+			} else {
+				tree[idx]--;
+			} 
+			return;
+		}
+		
+		// 값 구하기
+		int diff = getDiff(start, end, left, right);
+		tree[idx] += diff;
+		
+		range_update(idx*2, start, (start+end)/2, left, right);
+		range_update(idx*2+1, (start+end)/2+1, end, left, right);
+	}
+
+
+	private static int getDiff(int start, int end, int left, int right) {
+		int diff = 0;
+		if (left >= start && right <= end) {
+			for (int i = left; i<=right; i++) {
+				if (info[i] == 0) {
+					diff++;	
+				} else {
+					diff--;
+				}
+			}
+		} else if (left >= start && right > end) {
+			for (int i = left; i<=end; i++) {
+				if (info[i] == 0) {
+					diff++;	
+				} else {
+					diff--;
+				}
+			}
+		} else if (left > start && right <= end) {
+			for (int i = start; i<=end; i++) {
+				if (info[i] == 0) {
+					diff++;	
+				} else {
+					diff--;
+				}
+			}
+		}
+		return diff;
+	}
+
+
+
 	private static int get(int idx, int start, int end, int left, int right) {
 		if (right < start || left > end) {
 			return 0;
