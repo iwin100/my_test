@@ -19,7 +19,7 @@ public class Main {
 		int M = Integer.parseInt(token.nextToken());
 		
 		tree = new int[N*4];
-		info = new int[N];
+		info = new int[N+1];
 		
 		while (M-- > 0) {
 			token = new StringTokenizer(br.readLine());
@@ -30,13 +30,6 @@ public class Main {
 			if (O == 0) {
 				// 스위치 반전
 				range_update(1, 0, N-1, S-1, T-1);
-				for (int i = S-1; i<= T-1; i++) {
-					if (info[i] == 0) {
-						info[i]++;
-					} else {
-						info[i]--;
-					}
-				}
 			} else {
 				// 켜진거 카운트
 				int output = get(1, 0, N-1, S-1, T-1);
@@ -44,8 +37,6 @@ public class Main {
 			}
 		}
 	}
-	
-	
 	
 	private static void range_update(int idx, int start, int end, int left, int right) {
 		if (right < start || left > end) {
@@ -56,18 +47,20 @@ public class Main {
 		if (start == end) {
 			if (info[end] == 0) {
 				tree[idx]++;
+				info[end]++;
 			} else {
 				tree[idx]--;
+				info[end]--;
 			} 
 			return;
 		}
 		
 		// 값 구하기
-		int diff = getDiff(start, end, left, right);
-		tree[idx] += diff;
+//		tree[idx] += getDiff(start, end, left, right);
 		
 		range_update(idx*2, start, (start+end)/2, left, right);
 		range_update(idx*2+1, (start+end)/2+1, end, left, right);
+		tree[idx] = tree[idx*2] + tree[idx*2+1];
 	}
 
 
