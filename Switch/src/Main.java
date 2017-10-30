@@ -28,23 +28,74 @@ public class Main {
 			int T = Integer.parseInt(token.nextToken());
 			
 			if (O == 0) {
-				for (int target = S; target <= T; target++) {
-					// 스위치 반전
-					update(1, 0, N, target);
-					if (info[target] == 0) {
-						info[target] = 1;
-					} else {
-						info[target] = 0;
-					}
-				}
+				// 스위치 반전
+				range_update(1, 0, N-1, S-1, T-1);
 			} else {
 				// 켜진거 카운트
-				int output = get(1, 0, N, S, T);
+				int output = get(1, 0, N-1, S-1, T-1);
 				System.out.println(output);
 			}
 		}
 	}
 	
+	private static void range_update(int idx, int start, int end, int left, int right) {
+		if (right < start || left > end) {
+			return;
+		}
+		
+		// 리프 노드
+		if (start == end) {
+			if (info[end] == 0) {
+				tree[idx]++;
+				info[end]++;
+			} else {
+				tree[idx]--;
+				info[end]--;
+			} 
+			return;
+		}
+		
+		// 값 구하기
+//		tree[idx] += getDiff(start, end, left, right);
+		
+		range_update(idx*2, start, (start+end)/2, left, right);
+		range_update(idx*2+1, (start+end)/2+1, end, left, right);
+		tree[idx] = tree[idx*2] + tree[idx*2+1];
+	}
+
+
+	private static int getDiff(int start, int end, int left, int right) {
+		int diff = 0;
+		if (left >= start && right <= end) {
+			for (int i = left; i<=right; i++) {
+				if (info[i] == 0) {
+					diff++;	
+				} else {
+					diff--;
+				}
+			}
+		} else if (left >= start && right > end) {
+			for (int i = left; i<=end; i++) {
+				if (info[i] == 0) {
+					diff++;	
+				} else {
+					diff--;
+				}
+			}
+		} else if (left > start && right <= end) {
+			for (int i = start; i<=end; i++) {
+				if (info[i] == 0) {
+					diff++;	
+				} else {
+					diff--;
+				}
+			}
+		}
+		return diff;
+	}
+
+
+
 	private static int get(int idx, int start, int end, int left, int right) {
 		if (right < start || left > end) {
 			return 0;
