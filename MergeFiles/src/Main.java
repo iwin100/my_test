@@ -29,6 +29,8 @@ public class Main {
 			}
 		}
 	}
+	
+	
 	private static void gogo(int x1, int x2, int y1, int y2) {
 		int min = 0;
 		if (table[x2-1][y1] == 0 && table[x2][y1+1] == 0) {
