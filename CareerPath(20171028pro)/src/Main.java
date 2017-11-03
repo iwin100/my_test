@@ -14,16 +14,19 @@ public class Main {
 		BufferedReader br = new BufferedReader(isr);
 		StringTokenizer token;
 		
-		ArrayList<PAY> pay = new ArrayList<>();
+		ArrayList<PAY> pay;
+		int output = 0;
 		
 		int TC = Integer.parseInt(br.readLine());
 		while(TC-- >0) {
+			pay = new ArrayList<>();
+			output = 0;
 			token = new StringTokenizer(br.readLine());
 			int N = Integer.parseInt(token.nextToken());
 			int K = Integer.parseInt(token.nextToken());
 			
 			token = new StringTokenizer(br.readLine());
-			for (int i = 1; i<=N;i++) {
+			for (int i = 0; i<N;i++) {
 				pay.add(new PAY(Integer.parseInt(token.nextToken())));
 			}
 			
@@ -51,13 +54,26 @@ public class Main {
 				}
 			});
 			
-			System.out.println("1111");
+			for (int i = 0; i<N; i++) {
+				int size = pay.get(i).path.size();
+				int total = 0;
+				if (size != 0) {
+					for (int j = 0; j<size; j++) {
+						total += pay.get(i).path.get(j).total +1;
+					}
+				}
+				pay.get(i).total = total;
+				output = (total + output)%1000000007;
+			}
+			
+			System.out.println(output);
 		}
 	}
 }
 
 class PAY {
 	int pay = 0;
+	int total = 0;
 	ArrayList<PAY> path;
 	public PAY(int p) {
 		this.pay = p;
