@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static Island island[];
 	static int tree[];
-	static int total;
+	static long total;
 	
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		System.setIn(new FileInputStream("input"));
@@ -23,7 +23,6 @@ public class Main {
 		while (TC-- > 0) {
 			int N = Integer.parseInt(br.readLine());
 			island = new Island[N];
-			tree  = new int[N*N];
 			total = 0;
 			
 			for (int i = 0; i<N; i++) {
@@ -33,6 +32,32 @@ public class Main {
 				island[i] = new Island(x, y);
 			}
 			
+			Arrays.sort(island, new Comparator<Island>() {
+				@Override
+				public int compare(Island o1, Island o2) {
+					if (o1.y < o2.y) {
+						return -1;
+					} else if (o1.y > o2.y) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
+			//¾ĞÃà
+			int idx = 0;
+			int maxY = 0;
+			int tempIDX = island[0].y;
+			for (int i = 0; i<N; i++) {
+				if (tempIDX == island[i].y) {
+					island[i].y = idx;
+				} else {
+					tempIDX = island[i].y;
+					island[i].y = ++idx;
+					maxY++;
+				}
+			}		
+
 			Arrays.sort(island, new Comparator<Island>() {
 				@Override
 				public int compare(Island o1, Island o2) {
@@ -48,20 +73,34 @@ public class Main {
 						}
 					}
 				}
-			});
+			});			
 			
-			int targetIDX = 0;
+			
 			int start = 0;
-			int end = N-1;
+			int end = maxY;
+			tree = new int[(maxY+1)*4];
 			
 			for (int i = 0; i<N; i++) {
-				update(1, targetIDX, start, end);
+				total += getSum(1, 0, island[i].y, start, end);
+				update(1, island[i].y, start, end);
 			}
-			System.out.println(island[0].x);
+			System.out.println(total);
 		}
 	}
+	private static int getSum(int idx, int left, int right, int start, int end) {
+		if (right < start || left > end) {
+			return 0;
+		}
+		
+		if (left <= start && right >= end) {
+			return tree[idx];
+		}
+		
+		return getSum(idx*2, left, right, start, (start+end)/2) +
+				    getSum(idx*2+1, left, right, (start+end)/2+1, end);
+	}
 	private static int update(int idx, int targetIDX, int start, int end) {
-		if (start > idx || idx < end) {
+		if (start > targetIDX || targetIDX > end) {
 			return tree[idx];
 		}
 		
