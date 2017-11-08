@@ -5,46 +5,38 @@ import java.io.InputStreamReader;
 
 // https://www.acmicpc.net/problem/2579
 public class Main {
-	static int input[];
+	static int table[][];
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		System.setIn(new FileInputStream("input"));
 		InputStreamReader isr = new InputStreamReader(System.in);
 		BufferedReader br = new BufferedReader(isr);
 		
 		int N = Integer.parseInt(br.readLine());
-		input = new int[N];
+		table = new int[3][N+2];
 		for (int i = N-1; i>=0; i--) {
-			input[i] = Integer.parseInt(br.readLine());
+			table[0][i] = Integer.parseInt(br.readLine());
 		}
 		
-		int result = Math.max(goNext1(0, N, 1), goNext2(0, N));
-		System.out.println(result + input[0]);
+		table[1][0] = table[0][0];
+		int result = 0;
+		for (int i = 0; i<N; i++) {
+			result = Math.max(Math.max(table[1][i], table[2][i]), result);
+			if (table[1][i] != 0) {
+				goN1(i);
+				goN2(1, i);
+			}
+			if (table[2][i] != 0) {
+				goN2(2, i);
+			}
+		}
+		System.out.println(result);
 	}
 	
-	private static int goNext2(int idx, int end) {
-		idx += 2;
-		if (idx >= end) {
-			return 0;
-		}
-		int rst = input[idx];
-		rst += Math.max(goNext1(idx, end, 1), goNext2(idx, end));
-		return rst;
+	private static void goN2(int cnt, int idx) {
+		table[1][idx+2] = Math.max(table[1][idx+2], table[cnt][idx] + table[0][idx+2]);
 	}
-	
-	private static int goNext1(int idx, int end, int cnt) {
-		idx += 1;
-		cnt ++;
-		if (idx >= end) {
-			return 0;
-		}
-		if (cnt == 2 ) {
-			int rst = input[idx];
-			rst += goNext2(idx, end);
-			return rst;
-		}
-		
-		int rst = input[idx];
-		rst += Math.max(goNext1(idx, end, cnt), goNext2(idx, end));
-		return rst;
+
+	private static void goN1(int idx) {
+		table[2][idx+1] = Math.max(table[2][idx+1], table[1][idx] + table[0][idx+1]);
 	}
 }
