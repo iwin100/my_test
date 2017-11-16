@@ -42,21 +42,25 @@ public class Main {
 				} else if (o1.x < o2.x) {
 					return -1;
 				} else {
-					return 0;
+					if (o1.y > o2.y) {
+						return -1;
+					} else {
+						return 1;
+					}
 				}
 			}
 		});
 		
 		for (int i = 0; i< N; i++) {
+			if (i+1<N && mine[i].x == mine[i+1].x) {
+				continue;
+			}
+			
 			mapList = new ArrayList<>();
 			for (int j = 0; j <= i; j++) {
 				insert(mine[j]);
 			}
-			if (i+1<N && mine[i].x == mine[i+1].x) {
-				continue;
-			} else {
-				getBig();
-			}
+			getBig();
 		}
 		
 		System.out.println(big);
