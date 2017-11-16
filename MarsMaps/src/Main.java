@@ -60,6 +60,13 @@ public class Main {
 	}
 	private static long rangeUpdate(int idx, int left, int right, boolean isStart, int start, int end) {
 		if (right < start || left > end) {
+			if (start == end) {
+				if (tree[idx] == 0) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
 			return tree[idx];
 		}
 		
