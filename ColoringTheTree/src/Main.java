@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 // https://www.acmicpc.net/problem/1693
 public class Main {
 	static ArrayList<Node> input = new ArrayList<>();
+	static int MAX_SIZE = 15;
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		System.setIn(new FileInputStream("input"));
 		InputStreamReader isr = new InputStreamReader(System.in);
@@ -28,15 +29,20 @@ public class Main {
 		
 		dfs(0);
 		int c_table[] = input.get(0).table;
-		System.out.println(Math.min(Math.min(c_table[0], c_table[1]),
-				                    Math.min(c_table[2], c_table[3])
-				                   )
-				          );
+		int min = c_table[0];
+		for (int i = 1; i<MAX_SIZE; i++) {
+			min = Math.min(min, c_table[i]);
+		}
+		System.out.println(min);
 	}
 	
 	private static void dfs(int idx) {
 		input.get(idx).visit = true;
 		input.get(idx).parent = true;
+		for (int i = 1; i<= MAX_SIZE; i++) {
+			input.get(idx).table[i-1] = i;
+		}
+		
 		for (int i = 0; i< input.get(idx).connect.size(); i++) {
 			if (input.get(idx).connect.get(i).visit == true) {
 				continue;
@@ -52,30 +58,32 @@ public class Main {
 			}
 			
 			int c_table[] = child.table;
-			input.get(idx).table[0] += Math.min(c_table[1], 
-					                            Math.min(c_table[2], c_table[3])); 
-			input.get(idx).table[1] += Math.min(c_table[0],
-					                            Math.min(c_table[2], c_table[3]));
-			input.get(idx).table[2] += Math.min(c_table[0],
-					                            Math.min(c_table[1], c_table[3]));
-			input.get(idx).table[3] += Math.min(c_table[0],
-					                            Math.min(c_table[1], c_table[2]));
+			for (int j = 0; j<MAX_SIZE; j++) {
+				input.get(idx).table[j] += getMin(j, c_table);
+			}
 		}
+	}
+
+	private static int getMin(int exclude, int[] c_table) {
+		int min = Integer.MAX_VALUE;
+		for (int i = 0; i<MAX_SIZE; i++) {
+			if (i == exclude) {
+				continue;
+			}
+			min = Math.min(min, c_table[i]);
+		}
+		return min;
 	}
 }
 
 class Node {
 	ArrayList<Node> connect = new ArrayList<>();
-	int table[] = new int[4];
+	int table[] = new int[20];
 	int idx;
 	boolean visit = false;
 	boolean parent = false;
 	
 	Node(int idx){
 		this.idx = idx;
-		this.table[0] = 1;
-		this.table[1] = 2;
-		this.table[2] = 3;
-		this.table[3] = 4;
 	}
 }
