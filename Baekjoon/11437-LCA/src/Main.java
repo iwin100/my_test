@@ -48,6 +48,8 @@ public class Main {
 			for (int i = 0; i< size; i++) {
 				int childNum = tree.get(target).conn.get(i);		
 				if (childNum != parent[target]) {
+					// 부모 노드가 아닐 경우
+					// 깊이 정보/ 부모 정보 갱신
 					parent[childNum] = target; 
 					depth[childNum] = parentDepth + 1;
 					q.add(childNum);
