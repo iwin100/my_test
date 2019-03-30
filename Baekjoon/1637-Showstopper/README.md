@@ -12,3 +12,4 @@ parametric search
 ## 관련 문제 
 * https://www.acmicpc.net/problem/2805
 * https://www.acmicpc.net/problem/2343
+
